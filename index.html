@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCC Exam Prep — এনসিসি পরীক্ষা প্রস্তুতি</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ═══════════ NAV ═══════════ -->
+  <nav id="app-nav">
+    <div class="nav-brand" data-nav="home">
+      <span class="nav-logo">🚗</span>
+      <span class="nav-title">NCC Prep</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-nav="home" title="Home">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-btn" data-nav="study" title="Study">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span>Studio</span>
+      </button>
+      <button class="nav-btn" data-nav="stats" title="Statistics">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+        <span>Statistiche</span>
+      </button>
+      <button class="nav-btn" data-nav="bookmarks" title="Bookmarks">
+        <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+        <span>Salvati</span>
+      </button>
+      <button class="nav-btn" data-nav="settings" title="Settings">
+        <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+        <span>Impostazioni</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════ VIEW: HOME ═══════════ -->
+  <div id="view-home" class="view active">
+    <div class="home-header">
+      <h1>NCC Exam Prep</h1>
+      <p class="home-subtitle">এনসিসি পরীক্ষার প্রস্তুতি</p>
+    </div>
+
+    <div class="stats-summary card">
+      <div class="stat-row">
+        <div class="stat-box">
+          <span class="stat-num" id="home-seen">0</span>
+          <span class="stat-label">Viste / দেখা হয়েছে</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="home-correct">0</span>
+          <span class="stat-label">Corrette / সঠিক</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="home-accuracy">—</span>
+          <span class="stat-label">Accuratezza / নির্ভুলতা</span>
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="home-progress-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-label" id="home-progress-label">0 / 515 domande</span>
+      </div>
+    </div>
+
+    <div class="category-bars card">
+      <h3>Progresso per categoria / বিষয় অনুযায়ী অগ্রগতি</h3>
+      <div id="home-cat-bars"></div>
+    </div>
+
+    <div class="home-actions">
+      <button class="btn btn-primary btn-large" id="btn-quick-study">
+        <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6-4.72 7.72L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5V2.05z"/></svg>
+        Studio Intelligente (ripetizione)
+      </button>
+      <button class="btn btn-secondary btn-large" id="btn-browse-all">
+        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+        Sfoglia tutte le domande
+      </button>
+      <button class="btn btn-accent btn-large" id="btn-start-test">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        Simulazione esame
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: STUDY ═══════════ -->
+  <div id="view-study" class="view">
+
+    <!-- Category filter -->
+    <div id="category-filter">
+      <button class="pill active" data-cat="all">Tutte</button>
+      <button class="pill" data-cat="mechanics">Meccanica</button>
+      <button class="pill" data-cat="road_safety">Sicurezza</button>
+      <button class="pill" data-cat="insurance">Assicurazione</button>
+      <button class="pill" data-cat="ncc_regs">Normativa NCC</button>
+      <button class="pill" data-cat="navigation">Navigazione</button>
+      <button class="pill" data-cat="advanced_systems">Sistemi Avanzati</button>
+      <button class="pill" data-cat="bookmarks">⭐ Salvati</button>
+    </div>
+
+    <!-- Study controls bar -->
+    <div class="study-controls">
+      <label class="toggle-label">
+        <input type="checkbox" id="spaced-rep-toggle">
+        <span class="toggle-slider"></span>
+        Ripetizione spaziata
+      </label>
+      <span class="study-pos" id="study-pos">1 / 515</span>
+    </div>
+
+    <!-- Question card -->
+    <div class="question-card card" id="question-card">
+      <div class="q-meta">
+        <span class="q-number" id="q-number">Q1</span>
+        <span class="q-category-badge" id="q-category-badge">Meccanica</span>
+        <button class="bookmark-btn" id="bookmark-btn" title="Salva domanda">
+          <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+        </button>
+      </div>
+
+      <div class="q-text" id="q-text-it">Caricamento...</div>
+
+      <div class="q-translation hidden" id="q-text-bn">
+        <div class="translation-label">বাংলা অনুবাদ</div>
+        <div id="bn-question"></div>
+      </div>
+
+      <div class="q-actions">
+        <button class="action-btn" id="btn-translate" title="Traduci in bengalese">
+          <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+          অনুবাদ
+        </button>
+        <button class="action-btn" id="btn-tts-it" title="Ascolta in italiano">
+          <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          Ascolta IT
+        </button>
+        <button class="action-btn hidden" id="btn-tts-bn" title="বাংলায় শুনুন">
+          <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          শুনুন BN
+        </button>
+      </div>
+
+      <div id="q-options" class="q-options"></div>
+
+      <div class="q-feedback hidden" id="q-feedback">
+        <span id="q-feedback-icon"></span>
+        <span id="q-feedback-text"></span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="q-nav">
+      <button class="btn btn-ghost" id="btn-prev">← Precedente</button>
+      <button class="btn btn-ghost" id="btn-skip">Salta →</button>
+      <button class="btn btn-primary hidden" id="btn-next">Prossima →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: PRACTICE TEST ═══════════ -->
+  <div id="view-test" class="view">
+
+    <!-- Test setup screen -->
+    <div id="test-setup" class="card">
+      <h2>Simulazione Esame</h2>
+      <p class="bn-text">পরীক্ষার অনুশীলন করুন — অনুবাদ ছাড়া</p>
+
+      <div class="form-group">
+        <label>Categoria / বিষয়</label>
+        <select id="test-cat-select">
+          <option value="all">Tutte le categorie</option>
+          <option value="mechanics">Meccanica del Veicolo</option>
+          <option value="road_safety">Sicurezza Stradale</option>
+          <option value="insurance">Assicurazione e Normativa</option>
+          <option value="ncc_regs">Normativa NCC/Taxi</option>
+          <option value="navigation">Navigazione</option>
+          <option value="advanced_systems">Sistemi Avanzati</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Numero di domande / প্রশ্নের সংখ্যা</label>
+        <div class="count-pills">
+          <button class="pill active" data-count="10">10</button>
+          <button class="pill" data-count="20">20</button>
+          <button class="pill" data-count="30">30</button>
+          <button class="pill" data-count="50">50</button>
+          <button class="pill" data-count="all">Tutte</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="toggle-label">
+          <input type="checkbox" id="test-timer-toggle">
+          <span class="toggle-slider"></span>
+          Timer (1 min per domanda)
+        </label>
+      </div>
+
+      <button class="btn btn-primary btn-large" id="btn-start-test-go">
+        Inizia la simulazione →
+      </button>
+    </div>
+
+    <!-- Active test screen -->
+    <div id="test-active" class="hidden">
+      <div class="test-header">
+        <span class="test-pos" id="test-pos">1 / 20</span>
+        <span class="test-timer hidden" id="test-timer">1:00</span>
+      </div>
+
+      <div class="question-card card">
+        <div class="q-meta">
+          <span class="q-number" id="test-q-number">Q1</span>
+          <span class="q-category-badge" id="test-q-badge">—</span>
+        </div>
+        <div class="q-text" id="test-q-text">—</div>
+        <div id="test-q-options" class="q-options"></div>
+        <div class="q-feedback hidden" id="test-q-feedback">
+          <span id="test-feedback-icon"></span>
+          <span id="test-feedback-text"></span>
+        </div>
+      </div>
+
+      <div class="q-nav">
+        <button class="btn btn-ghost" id="btn-test-skip">Salta</button>
+        <button class="btn btn-primary hidden" id="btn-test-next">Prossima →</button>
+      </div>
+    </div>
+
+    <!-- Test score screen -->
+    <div id="test-score" class="hidden card">
+      <h2 id="score-title">Risultato / ফলাফল</h2>
+      <div class="score-big" id="score-display">—</div>
+      <div class="score-detail" id="score-detail"></div>
+      <div class="score-wrong-list" id="score-wrong-list"></div>
+      <div class="score-actions">
+        <button class="btn btn-primary" id="btn-score-retry">Riprova</button>
+        <button class="btn btn-ghost" id="btn-score-home">Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: STATS ═══════════ -->
+  <div id="view-stats" class="view">
+    <div class="card">
+      <h2>Statistiche / পরিসংখ্যান</h2>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <span class="stat-num" id="stats-total-seen">0</span>
+          <span class="stat-label">Viste</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="stats-total-correct">0</span>
+          <span class="stat-label">Corrette</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="stats-accuracy">—</span>
+          <span class="stat-label">Accuratezza</span>
+        </div>
+      </div>
+
+      <h3>Per categoria / বিষয় অনুযায়ী</h3>
+      <div id="stats-cat-bars"></div>
+    </div>
+
+    <div class="card">
+      <h3>Domande più difficili / সবচেয়ে কঠিন প্রশ্ন</h3>
+      <div id="stats-hardest"></div>
+    </div>
+
+    <div class="card">
+      <h3>Risposte recenti errate / সম্প্রতি ভুল</h3>
+      <div id="stats-recent-wrong"></div>
+    </div>
+
+    <div class="card danger-zone">
+      <h3>Azzera progresso / অগ্রগতি মুছুন</h3>
+      <p>Questa azione è irreversibile. / এটি পূর্বাবস্থায় ফেরানো যাবে না।</p>
+      <button class="btn btn-danger" id="btn-reset-progress">Azzera tutto</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: BOOKMARKS ═══════════ -->
+  <div id="view-bookmarks" class="view">
+    <div class="card">
+      <div class="bookmark-header">
+        <h2>Domande salvate / সংরক্ষিত প্রশ্ন</h2>
+        <button class="btn btn-secondary" id="btn-study-bookmarks">Studio ⭐</button>
+      </div>
+      <p class="empty-msg hidden" id="bookmarks-empty">
+        Nessuna domanda salvata. Clicca ⭐ durante lo studio per salvarne una.<br>
+        <span class="bn-text">কোনো প্রশ্ন সংরক্ষিত নেই। পড়ার সময় ⭐ ক্লিক করুন।</span>
+      </p>
+      <div id="bookmarks-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: SETTINGS ═══════════ -->
+  <div id="view-settings" class="view">
+    <div class="card">
+      <h2>Impostazioni / সেটিংস</h2>
+
+      <div class="form-group">
+        <label>Velocità lettura (TTS) / পড়ার গতি</label>
+        <div class="slider-row">
+          <span>Lento</span>
+          <input type="range" id="tts-rate" min="0.5" max="1.5" step="0.1" value="0.85">
+          <span>Veloce</span>
+        </div>
+        <span class="slider-val" id="tts-rate-val">0.85×</span>
+      </div>
+
+      <div class="form-group">
+        <label>Voce italiana / ইতালীয় ভয়েস</label>
+        <select id="tts-voice-select">
+          <option value="">Predefinita</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Cache traduzioni / অনুবাদ ক্যাশ</label>
+        <div class="cache-info">
+          <span id="cache-size">0 traduzioni in cache</span>
+          <button class="btn btn-ghost btn-sm" id="btn-clear-cache">Svuota cache</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <h3>Come usare questa app / এই অ্যাপ কীভাবে ব্যবহার করবেন</h3>
+        <div class="help-text bn-text">
+          <p>১. প্রতিটি প্রশ্ন পড়ুন এবং সঠিক উত্তর বেছে নিন।</p>
+          <p>২. "অনুবাদ" বোতাম চাপলে বাংলায় অনুবাদ দেখাবে।</p>
+          <p>৩. "Ascolta IT" চাপলে ইতালীয় ভাষায় পড়ে শোনাবে।</p>
+          <p>৪. ⭐ চাপলে কঠিন প্রশ্ন সংরক্ষিত হবে।</p>
+          <p>৫. "Ripetizione spaziata" চালু করলে ভুল প্রশ্ন বারবার আসবে।</p>
+          <p>৬. "Simulazione esame" দিয়ে আসল পরীক্ষার মতো অনুশীলন করুন।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TOAST ═══════════ -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- ═══════════ CONFIRM MODAL ═══════════ -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <p id="modal-msg"></p>
+      <div class="modal-actions">
+        <button class="btn btn-danger" id="modal-confirm">Conferma</button>
+        <button class="btn btn-ghost" id="modal-cancel">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
