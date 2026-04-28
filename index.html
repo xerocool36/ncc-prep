@@ -117,9 +117,42 @@
   <div id="view-chapters" class="view">
     <div class="home-header">
       <h2 style="font-size:1.5rem;color:var(--green)">Capitoli / অধ্যায়</h2>
-      <p class="home-subtitle" style="font-size:0.9rem">Scegli un capitolo da esercitare</p>
+      <p class="home-subtitle chapters-subtitle-default" style="font-size:0.9rem">Scegli un capitolo da esercitare</p>
+      <p class="home-subtitle chapters-subtitle-select" style="font-size:0.9rem">Seleziona i capitoli, poi avvia il quiz / অধ্যায় বাছাই করুন</p>
     </div>
+
+    <div class="chapters-toolbar">
+      <button class="btn btn-primary chapters-multi-btn" id="btn-chapters-multi">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>
+        Quiz multi-capitolo
+      </button>
+      <button class="btn btn-ghost chapters-cancel-btn" id="btn-chapters-cancel">
+        ✕ Annulla
+      </button>
+    </div>
+
     <div id="chapters-list"></div>
+
+    <div class="card chapters-quiz-bar">
+      <div class="chapters-quiz-row">
+        <div class="chapters-quiz-summary" id="chapters-selected-count">0 capitoli · 0 domande</div>
+        <div class="chapters-quiz-actions">
+          <button class="btn btn-ghost btn-sm" id="btn-chapters-select-all">Tutti</button>
+          <button class="btn btn-ghost btn-sm" id="btn-chapters-clear">Pulisci</button>
+        </div>
+      </div>
+      <div class="chapters-count-picker">
+        <span class="chapters-count-label">Domande:</span>
+        <div class="pill-group" id="chapters-count-group">
+          <button class="pill active" data-count="20">20</button>
+          <button class="pill" data-count="40">40</button>
+          <button class="pill" data-count="all">Tutte</button>
+        </div>
+      </div>
+      <button class="btn btn-primary chapters-start-btn" id="btn-chapters-start" disabled>
+        Inizia quiz / কুইজ শুরু করুন →
+      </button>
+    </div>
   </div>
 
   <!-- ═══════════ VIEW: STUDY ═══════════ -->
@@ -565,7 +598,18 @@
     </div>
   </div>
 
-  <script src="questions.js?v=8"></script>
-  <script src="app.js?v=8"></script>
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="app-footer">
+    <span class="app-footer-text">Realizzato da</span>
+    <a class="app-footer-link" href="https://x3roautomations.it" target="_blank" rel="noopener" title="X3RO Automations">
+      <picture>
+        <source media="(max-width: 640px)" srcset="x3ro-logo-sm.png">
+        <img src="x3ro-logo.png" alt="X3RO Automations" class="app-footer-logo" loading="lazy" decoding="async" width="400" height="218">
+      </picture>
+    </a>
+  </footer>
+
+  <script src="questions.js?v=12"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

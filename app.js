@@ -19,11 +19,12 @@ const CATEGORIES = [
 ];
 
 const LS = {
-  PROGRESS: 'ncc_progress',
-  BOOKMARKS: 'ncc_bookmarks',
-  CACHE:     'ncc_trans_cache',
-  SETTINGS:  'ncc_settings',
-  NOTES:     'ncc_notes',
+  PROGRESS:    'ncc_progress',
+  BOOKMARKS:   'ncc_bookmarks',
+  CACHE:       'ncc_trans_cache',
+  SETTINGS:    'ncc_settings',
+  NOTES:       'ncc_notes',
+  CHAPTER_SEL: 'ncc_chapter_selection',
 };
 
 // ─────────────────────────────────────────
@@ -39,6 +40,8 @@ const state = {
   testConfig: { category: 'all', count: 20, timer: false },
   testSession: null,    // { questions[], answers[], timerInterval, startTime }
   pendingTranslations: new Set(),
+  chaptersSelectMode: false,
+  chapterSelection: { categories: [], count: 20 },
 };
 
 // ─────────────────────────────────────────
@@ -111,6 +114,17 @@ const storage = {
   deleteNote(id) {
     const notes = this.getNotes().filter(n => n.id !== id);
     localStorage.setItem(LS.NOTES, JSON.stringify(notes));
+  },
+  getChapterSelection() {
+    const raw = JSON.parse(localStorage.getItem(LS.CHAPTER_SEL) || 'null');
+    if (!raw) return { categories: [], count: 20 };
+    return {
+      categories: Array.isArray(raw.categories) ? raw.categories : [],
+      count: raw.count === 'all' ? 'all' : (parseInt(raw.count) || 20),
+    };
+  },
+  saveChapterSelection(sel) {
+    localStorage.setItem(LS.CHAPTER_SEL, JSON.stringify(sel));
   },
 };
 
@@ -426,7 +440,7 @@ const studyCtrl = {
     if (correct) {
       this.sessionStats.correct++;
     } else {
-      this.sessionStats.wrong.push(q);
+      this.sessionStats.wrong.push({ q, ans: selectedIndex });
     }
 
     // Style buttons
@@ -638,12 +652,18 @@ const studyCtrl = {
     if (stats.wrong.length) {
       wrongSection.classList.remove('hidden');
       const letters = ['A', 'B', 'C'];
-      stats.wrong.slice(0, 20).forEach(function(q) {
+      stats.wrong.slice(0, 20).forEach(function(entry) {
+        const q = entry.q;
+        const ans = entry.ans;
+        const userLine = (ans === null || ans === undefined)
+          ? '<div class="score-wrong-user score-wrong-skipped">⊘ Saltata / এড়িয়ে যাওয়া</div>'
+          : '<div class="score-wrong-user">✗ La tua risposta: ' + letters[ans] + '. ' + q.it.options[ans] + '</div>';
         const div = document.createElement('div');
         div.className = 'score-wrong-item';
         div.innerHTML =
           '<div class="score-wrong-q">Q' + q.id + ': ' + q.it.question + '</div>' +
-          '<div class="score-wrong-correct">✓ ' + letters[q.correctIndex] + '. ' + q.it.options[q.correctIndex] + '</div>';
+          userLine +
+          '<div class="score-wrong-correct">✓ Risposta corretta: ' + letters[q.correctIndex] + '. ' + q.it.options[q.correctIndex] + '</div>';
         wrongList.appendChild(div);
       });
     } else {
@@ -690,11 +710,13 @@ const testCtrl = {
   session: null,
 
   start() {
-    const { category, count, timer, source } = state.testConfig;
+    const { category, categories, count, timer, source } = state.testConfig;
     const bookmarks = storage.getBookmarks();
 
     let pool;
-    if (category === 'errors') {
+    if (Array.isArray(categories) && categories.length > 0) {
+      pool = QUESTIONS.filter(q => categories.includes(q.category));
+    } else if (category === 'errors') {
       const wrongIds = Object.entries(storage.getProgress())
         .filter(([, v]) => v.wrong > 0)
         .map(([id]) => parseInt(id));
@@ -1101,11 +1123,15 @@ const testCtrl = {
 
       wrongList.slice(0, 20).forEach(({ q, ans }) => {
         const letters = ['A', 'B', 'C'];
+        const userLine = (ans === null || ans === undefined)
+          ? `<div class="score-wrong-user score-wrong-skipped">⊘ Saltata / এড়িয়ে যাওয়া</div>`
+          : `<div class="score-wrong-user">✗ La tua risposta: ${letters[ans]}. ${q.it.options[ans]}</div>`;
         const div = document.createElement('div');
         div.className = 'score-wrong-item';
         div.innerHTML = `
           <div class="score-wrong-q">Q${q.id}: ${q.it.question}</div>
-          <div class="score-wrong-correct">✓ ${letters[q.correctIndex]}. ${q.it.options[q.correctIndex]}</div>
+          ${userLine}
+          <div class="score-wrong-correct">✓ Risposta corretta: ${letters[q.correctIndex]}. ${q.it.options[q.correctIndex]}</div>
         `;
         wrongContainer.appendChild(div);
       });
@@ -1247,7 +1273,7 @@ const ui = {
       if (name === 'stats')     this.refreshStats();
       if (name === 'bookmarks') this.refreshBookmarks();
       if (name === 'settings')  this.refreshSettings();
-      if (name === 'chapters')  this.refreshChapters();
+      if (name === 'chapters')  { state.chaptersSelectMode = false; this.refreshChapters(); }
       if (name === 'notebook')  this.refreshNotebook();
       this.updateQuickNoteBtn();
     };
@@ -1476,22 +1502,30 @@ const ui = {
   },
 
   refreshChapters() {
+    const view = document.getElementById('view-chapters');
     const listEl = document.getElementById('chapters-list');
-    if (!listEl) return;
+    if (!listEl || !view) return;
+    view.classList.toggle('selecting', state.chaptersSelectMode);
+
     listEl.innerHTML = '';
     const progress = storage.getProgress();
+    const sel = state.chapterSelection;
+
     CATEGORIES.forEach(cat => {
       const catQs = QUESTIONS.filter(q => q.category === cat.slug);
       const total = catQs.length;
       const answered = catQs.filter(q => progress[q.id]).length;
       const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+      const isSelected = sel.categories.includes(cat.slug);
 
       const div = document.createElement('div');
-      div.className = 'chapter-card card';
+      div.className = 'chapter-card card' + (isSelected ? ' selected' : '');
       div.innerHTML = `
         <div class="chapter-card-header">
           <div>
-            <div class="chapter-title">${cat.label}</div>
+            <div class="chapter-title">
+              <span class="chapter-check-mark">✓</span>${cat.label}
+            </div>
             <div class="chapter-bn">${cat.bn}</div>
           </div>
           <div class="chapter-count">${total} domande</div>
@@ -1503,12 +1537,44 @@ const ui = {
           <span class="cat-bar-pct">${pct}%</span>
         </div>`;
       div.addEventListener('click', () => {
-        state.testConfig = { category: cat.slug, count: 'all', timer: false, source: 'chapters' };
-        testCtrl.start();
-        ui.showView('test');
+        if (state.chaptersSelectMode) {
+          const idx = state.chapterSelection.categories.indexOf(cat.slug);
+          if (idx === -1) state.chapterSelection.categories.push(cat.slug);
+          else state.chapterSelection.categories.splice(idx, 1);
+          storage.saveChapterSelection(state.chapterSelection);
+          this.refreshChapters();
+        } else {
+          state.testConfig = { category: cat.slug, count: 'all', timer: false, source: 'chapters' };
+          testCtrl.start();
+          ui.showView('test');
+        }
       });
       listEl.appendChild(div);
     });
+
+    this.updateChaptersBar();
+  },
+
+  updateChaptersBar() {
+    const sel = state.chapterSelection;
+    const summary = document.getElementById('chapters-selected-count');
+    if (!summary) return;
+    const totalQs = QUESTIONS.filter(q => sel.categories.includes(q.category)).length;
+    summary.textContent = `${sel.categories.length} capitoli · ${totalQs} domande`;
+
+    const startBtn = document.getElementById('btn-chapters-start');
+    if (startBtn) startBtn.disabled = sel.categories.length === 0;
+
+    document.querySelectorAll('#chapters-count-group .pill').forEach(p => {
+      p.classList.toggle('active', String(p.dataset.count) === String(sel.count));
+    });
+  },
+
+  setChaptersSelectMode(on) {
+    state.chaptersSelectMode = !!on;
+    if (!on) state.chapterSelection.categories = [];
+    storage.saveChapterSelection(state.chapterSelection);
+    this.refreshChapters();
   },
 
   refreshSettings() {
@@ -1808,6 +1874,50 @@ function wireEvents() {
   document.getElementById('btn-add-note').addEventListener('click', () => {
     ui.openNoteModal(null);
   });
+
+  // Chapters — multi-chapter quiz controls
+  document.getElementById('btn-chapters-multi').addEventListener('click', () => {
+    ui.setChaptersSelectMode(true);
+  });
+
+  document.getElementById('btn-chapters-cancel').addEventListener('click', () => {
+    ui.setChaptersSelectMode(false);
+  });
+
+  document.getElementById('btn-chapters-select-all').addEventListener('click', () => {
+    state.chapterSelection.categories = CATEGORIES.map(c => c.slug);
+    storage.saveChapterSelection(state.chapterSelection);
+    ui.refreshChapters();
+  });
+
+  document.getElementById('btn-chapters-clear').addEventListener('click', () => {
+    state.chapterSelection.categories = [];
+    storage.saveChapterSelection(state.chapterSelection);
+    ui.refreshChapters();
+  });
+
+  document.querySelectorAll('#chapters-count-group .pill').forEach(p => {
+    p.addEventListener('click', () => {
+      const v = p.dataset.count;
+      state.chapterSelection.count = v === 'all' ? 'all' : parseInt(v);
+      storage.saveChapterSelection(state.chapterSelection);
+      ui.updateChaptersBar();
+    });
+  });
+
+  document.getElementById('btn-chapters-start').addEventListener('click', () => {
+    const sel = state.chapterSelection;
+    if (sel.categories.length === 0) return;
+    state.testConfig = {
+      categories: [...sel.categories],
+      count: sel.count,
+      timer: false,
+      source: 'chapters',
+    };
+    state.chaptersSelectMode = false;
+    testCtrl.start();
+    ui.showView('test');
+  });
 }
 
 // ─────────────────────────────────────────
@@ -1830,6 +1940,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   ttsModule.init();
+  state.chapterSelection = storage.getChapterSelection();
   wireEvents();
   studyCtrl.init();
   makeDraggableNoteBtn();

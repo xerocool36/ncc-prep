@@ -869,7 +869,14 @@ input:checked + .toggle-slider::after { left: 21px; }
 
 .score-wrong-item:last-child { border-bottom: none; }
 
-.score-wrong-q { color: var(--text); margin-bottom: 4px; }
+.score-wrong-q { color: var(--text); margin-bottom: 6px; font-weight: 600; }
+.score-wrong-user {
+  color: var(--wrong);
+  font-weight: 700;
+  font-size: 0.82rem;
+  margin-bottom: 2px;
+}
+.score-wrong-user.score-wrong-skipped { color: var(--text-muted); }
 .score-wrong-correct { color: var(--correct); font-weight: 700; font-size: 0.82rem; }
 
 .score-actions { display: flex; gap: 10px; }
@@ -1380,6 +1387,128 @@ input[type="range"] {
   gap: 8px;
 }
 
+/* 23b. Chapters — multi-select mode */
+.chapters-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+.chapters-multi-btn,
+.chapters-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chapters-cancel-btn { display: none; }
+.chapters-subtitle-select { display: none; }
+
+#view-chapters.selecting .chapters-multi-btn { display: none; }
+#view-chapters.selecting .chapters-cancel-btn { display: inline-flex; }
+#view-chapters.selecting .chapters-subtitle-default { display: none; }
+#view-chapters.selecting .chapters-subtitle-select { display: block; }
+
+.chapter-check-mark { display: none; }
+#view-chapters.selecting .chapter-check-mark {
+  display: inline-block;
+  width: 1.2em;
+  color: var(--green);
+  font-weight: 900;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+#view-chapters.selecting .chapter-card.selected .chapter-check-mark {
+  opacity: 1;
+}
+#view-chapters.selecting .chapter-card.selected {
+  border-color: var(--green);
+  background: linear-gradient(135deg, #ffffff, #d8f0e0);
+  box-shadow: 0 6px 18px rgba(26,107,58,0.22);
+  transform: translateY(-1px);
+}
+
+.chapters-quiz-bar {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  position: sticky;
+  bottom: 16px;
+  z-index: 10;
+}
+#view-chapters.selecting .chapters-quiz-bar { display: flex; }
+
+.chapters-quiz-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chapters-quiz-summary {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.chapters-quiz-actions {
+  display: flex;
+  gap: 6px;
+}
+.chapters-count-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chapters-count-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.pill-group {
+  display: flex;
+  gap: 6px;
+}
+.chapters-start-btn { width: 100%; }
+.chapters-start-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 23c. App footer (powered by X3RO) */
+.app-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px 22px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.app-footer-text {
+  opacity: 0.85;
+}
+.app-footer-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+  opacity: 0.92;
+}
+.app-footer-link:hover {
+  transform: translateY(-1px);
+  opacity: 1;
+}
+.app-footer-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
 /* 24. Utility */
 .hidden { display: none !important; }
 
@@ -1450,6 +1579,17 @@ input[type="range"] {
   .btn-float-note {
     bottom: calc(var(--bottom-nav-h) + 12px);
   }
+
+  /* Raise sticky chapters quiz bar above bottom nav */
+  .chapters-quiz-bar {
+    bottom: calc(var(--bottom-nav-h) + 12px);
+  }
+
+  /* Keep footer visible above fixed bottom nav */
+  .app-footer {
+    padding-bottom: calc(var(--bottom-nav-h) + 14px);
+  }
+  .app-footer-logo { height: 34px; }
 
   /* Category filter: horizontal scroll instead of wrapping */
   #category-filter {
